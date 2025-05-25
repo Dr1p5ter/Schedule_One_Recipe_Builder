@@ -10,8 +10,8 @@ from util import get_ingredient_adjacency_lists, get_effect_details
 # No external sources used; see https://docs.pytest.org/en/stable/ for pytest usage.
 
 # Paths to the test data files (assumes tests run from project root)
-INGREDIENTS_JSON = os.path.join(os.path.dirname(__file__), "ingredients.json")
-EFFECTS_JSON = os.path.join(os.path.dirname(__file__), "effects.json")
+INGREDIENTS_JSON = os.path.join(os.path.dirname(__file__), "assets/ingredients.json")
+EFFECTS_JSON = os.path.join(os.path.dirname(__file__), "assets/effects.json")
 
 
 def test_get_ingredient_adjacency_lists_basic():
