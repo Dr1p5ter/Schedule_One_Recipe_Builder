@@ -11,17 +11,17 @@ def get_ingredient_adjacency_lists(
     Reads a JSON file containing ingredient data and creates an adjacency list
     representation of the ingredients and their effects.
     
-    Returns the adjacency list as a dictionary. The keys are the ingredient ids
-    and the values are lists of tuples. Each tuple contains the effect ids that
+    Returns the adjacency list as a dictionary. The keys are the ingredient IDs,
+    and the values are lists of tuples. Each tuple contains the effect IDs that
     the ingredient can produce, and the corresponding effects that get
-    transformed. The first tuple in the list of tuples contains the name of the
+    transformed. The first tuple in the list contains the name of the
     ingredient and the effect given by the ingredient. The rest of the tuples
-    contain the effect ids that get transformed by the ingredient. This is the
-    direct consequence of the compacting data. Make sure when you use this that
-    you are always adding the first element in the list before transforming a
+    contain the effect IDs that get transformed by the ingredient. This is a
+    direct consequence of the compacted data. Make sure when you use this that
+    you always add the first element in the list before transforming a
     given mixture.
 
-    For more information, see the class docstring for class Mix in mix.py.
+    For more information, see the class docstring for the class Mix in mix.py.
 
     Parameters
     ----------
@@ -44,7 +44,7 @@ def get_ingredient_adjacency_lists(
     with open(file_path, 'r') as file:
         ingredients_json = load(file)
 
-    # Make the adjacency list as a dictionary
+    # Create the adjacency list as a dictionary
     adj_lists: Dict[str, List[Tuple[Union[uint16, str], uint16]]] = {}
 
     # Iterate through the ingredients
@@ -75,7 +75,7 @@ def get_ingredient_adjacency_lists(
             (ingredients_json[ingredient]['name'], uint16(effect_given_value))
         ]
 
-        # Get the effect_replaces_on_mix dictionary
+        # Get the replaces_on_mix dictionary
         effect_replaces_on_mix = ingredients_json[ingredient]['replaces_on_mix']
 
         # Ensure effect_replaces_on_mix is a dictionary before iterating
@@ -137,7 +137,7 @@ def get_effect_details(
     with open(file_path, 'r') as file:
         effects_json = load(file)
 
-    # Make the effects list as a dictionary
+    # Create the effects list as a dictionary
     effects_details: Dict[str, Dict[str, Union[str, float32]]] = {}
 
     # Iterate through the effects
