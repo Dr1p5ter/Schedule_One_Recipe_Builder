@@ -1,0 +1,138 @@
+{
+    "0": {
+        "name": "anti_gravity",
+        "value": 0.54
+    },
+    "1": {
+        "name": "athletic",
+        "value": 0.32
+    },
+    "2": {
+        "name": "balding",
+        "value": 0.30
+    },
+    "3": {
+        "name": "bright_eyed",
+        "value": 0.40
+    },
+    "4": {
+        "name": "calming",
+        "value": 0.10
+    },
+    "5": {
+        "name": "calorie_dense",
+        "value": 0.28
+    },
+    "6": {
+        "name": "cyclopean",
+        "value": 0.56
+    },
+    "7": {
+        "name": "disorienting",
+        "value": 0.00
+    },
+    "8": {
+        "name": "electrifying",
+        "value": 0.50
+    },
+    "9": {
+        "name": "energizing",
+        "value": 0.22
+    },
+    "10": {
+        "name": "euphoric",
+        "value": 0.18
+    },
+    "11": {
+        "name": "explosive",
+        "value": 0.00
+    },
+    "12": {
+        "name": "focused",
+        "value": 0.16
+    },
+    "13": {
+        "name": "foggy",
+        "value": 0.36
+    },
+    "14": {
+        "name": "gingeritis",
+        "value": 0.20
+    },
+    "15": {
+        "name": "glowing",
+        "value": 0.48
+    },
+    "16": {
+        "name": "jennerising",
+        "value": 0.42
+    },
+    "17": {
+        "name": "laxative",
+        "value": 0.00
+    },
+    "18": {
+        "name": "long_faced",
+        "value": 0.52
+    },
+    "19": {
+        "name": "munchies",
+        "value": 0.12
+    },
+    "20": {
+        "name": "paranoia",
+        "value": 0.00
+    },
+    "21": {
+        "name": "refreshing",
+        "value": 0.14
+    },
+    "22": {
+        "name": "schizophrenia",
+        "value": 0.00
+    },
+    "23": {
+        "name": "sedating",
+        "value": 0.26
+    },
+    "24": {
+        "name": "seizure_inducing",
+        "value": 0.00
+    },
+    "25": {
+        "name": "shrinking",
+        "value": 0.60
+    },
+    "26": {
+        "name": "slippery",
+        "value": 0.34
+    },
+    "27": {
+        "name": "smelly",
+        "value": 0.00
+    },
+    "28": {
+        "name": "sneaky",
+        "value": 0.24
+    },
+    "29": {
+        "name": "spicy",
+        "value": 0.38
+    },
+    "30": {
+        "name": "thought_provoking",
+        "value": 0.44
+    },
+    "31": {
+        "name": "toxic",
+        "value": 0.00
+    },
+    "32": {
+        "name": "tropic_thunder",
+        "value": 0.46
+    },
+    "33": {
+        "name": "zombifying",
+        "value": 0.58
+    }
+}
