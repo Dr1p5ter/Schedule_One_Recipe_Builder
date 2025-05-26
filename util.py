@@ -33,6 +33,8 @@ def get_ingredient_adjacency_lists(
     ValueError
         If the JSON file contains invalid data types for ingredient_id, name,
         effect_given, or effect_replaces_on_mix.
+    FileNotFoundError
+        If the JSON file does not exist at the specified path.
 
     Returns
     -------
@@ -41,8 +43,11 @@ def get_ingredient_adjacency_lists(
     """
     # Read the JSON with the ingredients
     ingredients_json: Dict = {}
-    with open(file_path, 'r') as file:
-        ingredients_json = load(file)
+    try:
+        with open(file_path, 'r') as file:
+            ingredients_json = load(file)
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"File not found: {file_path}") from e
 
     # Create the adjacency list as a dictionary
     adj_lists: Dict[str, List[Tuple[Union[uint16, str], uint16]]] = {}
@@ -126,6 +131,8 @@ def get_effect_details(
     ValueError
         If the JSON file contains invalid data types for effect_id, name, or
         value.
+    FileNotFoundError
+        If the JSON file does not exist at the specified path.
         
     Returns
     -------
@@ -134,8 +141,11 @@ def get_effect_details(
     """
     # Read the JSON with the effects
     effects_json: Dict = {}
-    with open(file_path, 'r') as file:
-        effects_json = load(file)
+    try:
+        with open(file_path, 'r') as file:
+            effects_json = load(file)
+    except FileNotFoundError as e:  
+        raise FileNotFoundError(f"File not found: {file_path}") from e
 
     # Create the effects list as a dictionary
     effects_details: Dict[str, Dict[str, Union[str, float32]]] = {}
