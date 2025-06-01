@@ -196,31 +196,33 @@ def get_effect_details(
 
     # Iterate through the effects
     for effect_id in effects_json.keys():
-        # Ensure effect_id is a string
-        if not isinstance(effect_id, str):
-            raise ValueError(
-                f"Invalid type for effect_id: {type(effect_id)} in effects_json"
-            )
-
         # Ensure effects_json[effect_id] is a dictionary
         if not isinstance(effects_json[effect_id], dict):
             raise ValueError(
                 f"Invalid type for effects_json[effect_id]: "
-                f"{type(effects_json[effect_id])} in effects_json"
+                f"{type(effects_json[effect_id])} in effect '{effect_id}'"
+            )
+
+        # Ensure required keys are present
+        required_keys = {'name', 'value'}
+        if not required_keys.issubset(effects_json[effect_id].keys()):
+            missing = required_keys - set(effects_json[effect_id].keys())
+            raise MissingKeyError(
+                f"Missing required keys in effect {effect_id}: {missing}"
             )
 
         # Ensure effects_json[effect_id]['name'] is a string
         if not isinstance(effects_json[effect_id]['name'], str):
             raise ValueError(
-                f"Invalid type for effects_json[effect_id]['name']: "
-                f"{type(effects_json[effect_id]['name'])} in effects_json"
+                f"Invalid type for effect name: "
+                f"{type(effects_json[effect_id]['name'])} in effect '{effect_id}'"
             )
 
         # Ensure effects_json[effect_id]['value'] is a float
         if not isinstance(effects_json[effect_id]['value'], float):
             raise ValueError(
-                f"Invalid type for effects_json[effect_id]['value']: "
-                f"{type(effects_json[effect_id]['value'])} in effects_json"
+                f"Invalid type for effect value: "
+                f"{type(effects_json[effect_id]['value'])} in effect '{effect_id}'"
             )
 
         # Add entry to the effects list
