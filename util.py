@@ -1,25 +1,47 @@
 from json import load
-from numpy import uint16, float32
 from typing import Dict, List, Tuple, Union
+
+from numpy import float32, uint16
+
+class InvalidFileExtentionError(Exception):
+    """
+    Raised when the file extension is not supported.
+
+    Attributes
+    ----------
+    message : str
+        Error message indicating the invalid file extension.
+    """
+    def __init__(self, message: str = "Invalid file extension.") -> None:
+        self.message = message
+        super().__init__(self.message)
+
+class MissingKeyError(Exception):
+    """
+    Raised when a required key is missing in the JSON data.
+
+    Attributes
+    ----------
+    message : str
+        Error message indicating the missing key.
+    """
+    def __init__(self, message: str = "Missing required key in JSON data.") -> None:
+        self.message = message
+        super().__init__(self.message)
 
 def get_ingredient_adjacency_lists(
     file_path: str
 ) -> Dict[str, List[Tuple[Union[uint16, str], uint16]]]:
     """
-    get_ingredient_adjacency_lists (function)
-
     Reads a JSON file containing ingredient data and creates an adjacency list
     representation of the ingredients and their effects.
-    
+
     Returns the adjacency list as a dictionary. The keys are the ingredient IDs,
     and the values are lists of tuples. Each tuple contains the effect IDs that
     the ingredient can produce, and the corresponding effects that get
-    transformed. The first tuple in the list contains the name of the
-    ingredient and the effect given by the ingredient. The rest of the tuples
-    contain the effect IDs that get transformed by the ingredient. This is a
-    direct consequence of the compacted data. Make sure when you use this that
-    you always add the first element in the list before transforming a
-    given mixture.
+    transformed. The first tuple in the list contains the name of the ingredient
+    and the effect given by the ingredient. The rest of the tuples contain the
+    effect IDs that get transformed by the ingredient.
 
     For more information, see the class docstring for the class Mix in mix.py.
 
@@ -30,16 +52,15 @@ def get_ingredient_adjacency_lists(
 
     Raises
     ------
-    ValueError
-        If the JSON file contains invalid data types for ingredient_id, name,
-        effect_given, or effect_replaces_on_mix.
     FileNotFoundError
         If the JSON file does not exist at the specified path.
     InvalidFileExtentionError
         If the file does not have a .json extension.
     MissingKeyError
-        If the JSON file does not contain the required keys for each ingredient
-        (name, effect_given, replaces_on_mix).
+        If the JSON file does not contain the required keys for each ingredient.
+    ValueError
+        If the JSON file contains invalid data types for ingredient_id, name,
+        effect_given, or effect_replaces_on_mix.
 
     Returns
     -------
@@ -65,43 +86,42 @@ def get_ingredient_adjacency_lists(
 
     # Iterate through the ingredients
     for ingredient in ingredients_json.keys():
-        # Ensure ingredient is a string before using it as a key
-        if not isinstance(ingredient, str):
-            raise ValueError(
-                f"Invalid type for ingredient key: {type(ingredient)} in ingredients_json"
-            )
-
-        # Ensure ingredients_json[ingredient] is a dictionary before using it
+        # Ensure ingredients_json[ingredient] is a dictionary
         if not isinstance(ingredients_json[ingredient], dict):
             raise ValueError(
-                f"Invalid type for ingredients_json[ingredient]: {type(ingredients_json[ingredient])} in ingredients_json"
+                f"Invalid type for ingredients_json[ingredient]: "
+                f"{type(ingredients_json[ingredient])} in ingredient '{ingredient}'"
             )
 
-        # Ensure ingredients_json[ingredient].keys() contains 'name', 'effect_given', and 'replaces_on_mix'
+        # Ensure required keys are present
         required_keys = {'name', 'effect_given', 'replaces_on_mix'}
         if not required_keys.issubset(ingredients_json[ingredient].keys()):
+            missing = required_keys - set(ingredients_json[ingredient].keys())
             raise MissingKeyError(
-                f"Missing required keys in ingredient {ingredient}: {required_keys - set(ingredients_json[ingredient].keys())}"
+                f"Missing required keys in ingredient {ingredient}: {missing}"
             )
-        
-        # Ensure ingredients_json[ingredient]['name'] is a string
+
+        # Ensure 'name' is a string
         if not isinstance(ingredients_json[ingredient]['name'], str):
             raise ValueError(
-                f"Invalid type for name: {type(ingredients_json[ingredient]['name'])} in ingredient {ingredient}"
+                f"Invalid type for name: "
+                f"{type(ingredients_json[ingredient]['name'])} in ingredient '{ingredient}'"
             )
-        
-        # Ensure ingredients_json[ingredient]['effect_given'] is an int
+
+        # Ensure 'effect_given' is an int
         if not isinstance(ingredients_json[ingredient]['effect_given'], int):
             raise ValueError(
-                f"Invalid type for effect_given: {type(ingredients_json[ingredient]['effect_given'])} in ingredient {ingredient}"
+                f"Invalid type for effect_given: "
+                f"{type(ingredients_json[ingredient]['effect_given'])} in ingredient '{ingredient}'"
             )
-        
-        # ensure ingredients_json[ingredient]['replaces_on_mix'] is a dictionary
+
+        # Ensure 'replaces_on_mix' is a dictionary
         if not isinstance(ingredients_json[ingredient]['replaces_on_mix'], dict):
             raise ValueError(
-                f"Invalid type for replaces_on_mix: {type(ingredients_json[ingredient]['replaces_on_mix'])} in ingredient {ingredient}"
+                f"Invalid type for replaces_on_mix: "
+                f"{type(ingredients_json[ingredient]['replaces_on_mix'])} in ingredient '{ingredient}'"
             )
-        
+
         # Get the effect_given value
         effect_given_value = ingredients_json[ingredient]['effect_given']
 
@@ -115,16 +135,11 @@ def get_ingredient_adjacency_lists(
 
         # Add the effects to the adjacency list
         for effect in effect_replaces_on_mix.keys():
-            # Ensure effect key is a string before converting to uint16
-            if not isinstance(effect, str):
-                raise ValueError(
-                    f"Invalid type for effect key: {type(effect)} in ingredient {ingredient}"
-                )
-
-            # Ensure effect translation value is an int before converting to uint16
+            # Ensure effect translation value is an int
             if not isinstance(effect_replaces_on_mix[effect], int):
                 raise ValueError(
-                    f"Invalid type for effect translation value: {type(effect_replaces_on_mix[effect])} in ingredient {ingredient}"
+                    f"Invalid type for effect translation value: "
+                    f"{type(effect_replaces_on_mix[effect])} in ingredient '{ingredient}'"
                 )
 
             # Add the effect to the adjacency list
@@ -134,17 +149,13 @@ def get_ingredient_adjacency_lists(
 
     return adj_lists
 
-
 def get_effect_details(
     file_path: str
 ) -> Dict[str, Dict[str, Union[str, float32]]]:
     """
-    get_effect_details (function)
-
     Reads a JSON file containing effect data and creates a dictionary of effect
     details. Each effect is represented by a dictionary containing its name and
-    value. The values are exact copies of the values in the JSON file. They are
-    not mutated in any way.
+    value. The values are exact copies of the values in the JSON file.
 
     Parameters
     ----------
@@ -153,14 +164,14 @@ def get_effect_details(
 
     Raises
     ------
-    ValueError
-        If the JSON file contains invalid data types for effect_id, name, or
-        value.
     FileNotFoundError
         If the JSON file does not exist at the specified path.
     InvalidFileExtentionError
         If the file does not have a .json extension.
-        
+    ValueError
+        If the JSON file contains invalid data types for effect_id, name, or
+        value.
+
     Returns
     -------
     Dict[str, Dict[str, str | float32]]
@@ -177,7 +188,7 @@ def get_effect_details(
     try:
         with open(file_path, 'r') as file:
             effects_json = load(file)
-    except FileNotFoundError as e:  
+    except FileNotFoundError as e:
         raise FileNotFoundError(f"File not found: {file_path}") from e
 
     # Create the effects list as a dictionary
@@ -185,28 +196,31 @@ def get_effect_details(
 
     # Iterate through the effects
     for effect_id in effects_json.keys():
-        # Ensure effect_id is a string before using it as a key
+        # Ensure effect_id is a string
         if not isinstance(effect_id, str):
             raise ValueError(
                 f"Invalid type for effect_id: {type(effect_id)} in effects_json"
             )
 
-        # Ensure effects_json[effect_id] is a dictionary before using it
+        # Ensure effects_json[effect_id] is a dictionary
         if not isinstance(effects_json[effect_id], dict):
             raise ValueError(
-                f"Invalid type for effects_json[effect_id]: {type(effects_json[effect_id])} in effects_json"
+                f"Invalid type for effects_json[effect_id]: "
+                f"{type(effects_json[effect_id])} in effects_json"
             )
 
-        # Ensure effects_json[effect_id]['name'] is a string before using it
+        # Ensure effects_json[effect_id]['name'] is a string
         if not isinstance(effects_json[effect_id]['name'], str):
             raise ValueError(
-                f"Invalid type for effects_json[effect_id]['name']: {type(effects_json[effect_id]['name'])} in effects_json"
+                f"Invalid type for effects_json[effect_id]['name']: "
+                f"{type(effects_json[effect_id]['name'])} in effects_json"
             )
 
-        # Ensure effects_json[effect_id]['value'] is a float before using it
+        # Ensure effects_json[effect_id]['value'] is a float
         if not isinstance(effects_json[effect_id]['value'], float):
             raise ValueError(
-                f"Invalid type for effects_json[effect_id]['value']: {type(effects_json[effect_id]['value'])} in effects_json"
+                f"Invalid type for effects_json[effect_id]['value']: "
+                f"{type(effects_json[effect_id]['value'])} in effects_json"
             )
 
         # Add entry to the effects list
@@ -216,33 +230,3 @@ def get_effect_details(
         }
 
     return effects_details
-
-class InvalidFileExtentionError(Exception) :
-    """
-    InvalidFileExtentionError (class)
-
-    Exception raised when the file extension is not supported.
-    
-    Attributes
-    ----------
-    message : str
-        Error message indicating the invalid file extension.
-    """
-    def __init__(self, message: str = "Invalid file extension.") -> None:
-        self.message = message
-        super().__init__(self.message)
-
-class MissingKeyError(Exception) :
-    """
-    MissingKeyError (class)
-
-    Exception raised when a required key is missing in the JSON data.
-    
-    Attributes
-    ----------
-    message : str
-        Error message indicating the missing key.
-    """
-    def __init__(self, message: str = "Missing required key in JSON data.") -> None:
-        self.message = message
-        super().__init__(self.message)
