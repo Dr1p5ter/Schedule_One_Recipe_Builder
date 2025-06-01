@@ -7,7 +7,7 @@ For the time being, my latest release contains usable module code that can benef
 This application can run on any version of python 3.6+ but will need some other packages for runtime. Please consult my requirements.txt document I made. This is the minimal requirements. Run the following code using your own production enviornment to install the necessary modules:
 
 ```bash
-python -m pip install -r requirements.txt
+> python -m pip install -r requirements.txt
 ```
 ### **Please be within the parent directory and not in any of the subdirectories. This will cause issues since the location of the requirements file is in the parent directory.** ###
 
