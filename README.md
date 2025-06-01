@@ -1,6 +1,6 @@
 # Schedule_One_Recipe_Builder
 
-## Instalation
+## Installation
 
 For the time being, my latest release contains usable module code that can benefit anyone wanting to make their own code. Feel free to use my json files in the assets subdirectory. If you in fact want to change the values because of mods, feel free to. All I ask is to be credited please.
 
@@ -10,6 +10,8 @@ This application can run on any version of python 3.6+ but will need some other 
 > python -m pip install -r requirements.txt
 ```
 ### **Please be within the parent directory and not in any of the subdirectories. This will cause issues since the location of the requirements file is in the parent directory.** ###
+
+You can get the latest release here: https://github.com/Dr1p5ter/Schedule_One_Recipe_Builder/archive/refs/tags/v1.1.0-beta.zip
 
 ## Testing
 
