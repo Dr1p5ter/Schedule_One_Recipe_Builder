@@ -1,0 +1,67 @@
+{
+    "0": {
+        "name": "test_ingredient_0",
+        "effect_given": 0,
+        "replaces_on_mix": {
+            "1": 2,
+            "3": 4
+        }
+    },
+    "1": 1, 
+    "2": {
+        "name": "test_ingredient_2",
+        "effect_given": 2,
+        "replaces_on_mix": {
+            "3": 4,
+            "5": 6
+        }
+    },
+    "3": {
+        "name": "test_ingredient_3",
+        "effect_given": 3,
+        "replaces_on_mix": {
+            "4": 5,
+            "6": 7
+        }
+    },
+    "4": {
+        "name": "test_ingredient_4",
+        "effect_given": 4,
+        "replaces_on_mix": {
+            "5": 6,
+            "7": 8
+        }
+    },
+    "5": {
+        "name": "test_ingredient_5",
+        "effect_given": 5,
+        "replaces_on_mix": {
+            "6": 7,
+            "1": 8
+        }
+    },
+    "6": {
+        "name": "test_ingredient_6",
+        "effect_given": 6,
+        "replaces_on_mix": {
+            "7": 8,
+            "2": 4
+        }
+    },
+    "7": {
+        "name": "test_ingredient_7",
+        "effect_given": 7,
+        "replaces_on_mix": {
+            "3": 8,
+            "0": 4
+        }
+    },
+    "8": {
+        "name": "test_ingredient_8",
+        "effect_given": 8,
+        "replaces_on_mix": {
+            "4": 2,
+            "5": 6
+        }
+    }
+}
