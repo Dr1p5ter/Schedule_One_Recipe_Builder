@@ -1,0 +1,8 @@
+{
+    "0": {
+        "name": "test_ingredient_0",
+        "effect_given": 0,
+        "replaces_on_mix": {
+        }
+    }
+}
