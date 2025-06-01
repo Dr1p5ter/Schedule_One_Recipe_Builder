@@ -1,5 +1,4 @@
-# Ensure scope of test includes parent directory
-from numpy import uint16, issubdtype
+from numpy import float32, issubdtype, uint16
 from os import path
 from pytest import raises
 from sys import path as syspath
@@ -7,16 +6,17 @@ from sys import path as syspath
 # Add parent directory to sys.path so we can import util
 syspath.insert(0, path.abspath(path.join(path.dirname(__file__), '..')))
 
-# Import the util module from the parent directory
 import util
 
+# Paths to the test data files
+TEST_FILE_NOT_FOUND_POINTER: str = path.join(
+    path.dirname(__file__), "assets/test_not_found.json"
+)
+TEST_INVALID_FILE_EXTENSION: str = path.join(
+    path.dirname(__file__), "assets/test_bad_extension.txt"
+)
+
 # Paths to the test ingredients data files
-TEST_INGREDIENTS_FILE_NOT_FOUND_POINTER: str = path.join(
-    path.dirname(__file__), "assets/test_test_test_test.json"
-)
-TEST_INGREDIENTS_INVALID_FILE_EXTENSION: str = path.join(
-    path.dirname(__file__), "assets/test_sample_ingredients_invalid_file_extension.txt"
-)
 TEST_INGREDIENTS_INVALID_VALUE_TYPE_1_JSON: str = path.join(
     path.dirname(__file__), "assets/test_sample_ingredients_invalid_value_type_1.json"
 )
@@ -43,8 +43,20 @@ TEST_INGREDIENTS_SMALL_JSON: str = path.join(
 )
 
 # Paths to the test effects data files
+TEST_EFFECTS_INVALID_VALUE_TYPE_1_JSON: str = path.join(
+    path.dirname(__file__), "assets/test_sample_effects_invalid_value_type_1.json"
+)
+TEST_EFFECTS_INVALID_VALUE_TYPE_2_JSON: str = path.join(
+    path.dirname(__file__), "assets/test_sample_effects_invalid_value_type_2.json"
+)
+TEST_EFFECTS_INVALID_VALUE_TYPE_3_JSON: str = path.join(
+    path.dirname(__file__), "assets/test_sample_effects_invalid_value_type_3.json"
+)
 TEST_EFFECTS_JSON: str = path.join(
     path.dirname(__file__), "assets/test_sample_effects.json"
+)
+TEST_EFFECTS_MISSING_KEY: str = path.join(
+    path.dirname(__file__), "assets/test_sample_effects_missing_keys.json"
 )
 
 """
@@ -57,23 +69,23 @@ def test_get_ingredient_adjacency_lists_basic():
 
     # Check the adjacency list for the first ingredient
     assert adj_lists['0'] == [
-        ('test_ingredient_0', 0),
-        (1, 2),
-        (3, 4)
+        ('test_ingredient_0', uint16(0)),
+        (uint16(1), uint16(2)),
+        (uint16(3), uint16(4))
     ]
 
     # Check the adjacency list for a middle ingredient
     assert adj_lists['5'] == [
-        ('test_ingredient_5', 5),
-        (6, 7),
-        (1, 8)
+        ('test_ingredient_5', uint16(5)),
+        (uint16(6), uint16(7)),
+        (uint16(1), uint16(8))
     ]
 
     # Check the adjacency list for the last ingredient
     assert adj_lists['8'] == [
-        ('test_ingredient_8', 8),
-        (4, 2),
-        (5, 6)
+        ('test_ingredient_8', uint16(8)),
+        (uint16(4), uint16(2)),
+        (uint16(5), uint16(6))
     ]
 
     pass
@@ -86,7 +98,7 @@ def test_get_ingredient_adjacency_lists_small():
 
     # Check the adjacency list for the ingredient
     assert adj_lists['0'] == [
-        ('test_ingredient_0', 0)
+        ('test_ingredient_0', uint16(0))
     ]
 
     pass
@@ -197,7 +209,8 @@ def test_get_ingredient_adjacency_lists_value_error_5():
 
 def test_get_ingredient_adjacency_lists_missing_key_error():
     """
-    Ensure that a MissingKeyError is raised when a required key is missing in the JSON file.
+    Ensure that a MissingKeyError is raised when a required key is missing in
+    the JSON file.
     """
     with raises(util.MissingKeyError) as e:
         util.get_ingredient_adjacency_lists(TEST_INGREDIENTS_MISSING_KEY)
@@ -215,21 +228,22 @@ def test_get_ingredient_adjacency_lists_file_not_found_error():
     Ensure that a FileNotFoundError is raised when the file does not exist.
     """
     with raises(FileNotFoundError) as e:
-        util.get_ingredient_adjacency_lists(TEST_INGREDIENTS_FILE_NOT_FOUND_POINTER)
+        util.get_ingredient_adjacency_lists(TEST_FILE_NOT_FOUND_POINTER)
 
     # Check the message raised exception
     assert str(e.value) == (
-        f"File not found: {TEST_INGREDIENTS_FILE_NOT_FOUND_POINTER}"
+        f"File not found: {TEST_FILE_NOT_FOUND_POINTER}"
     )
 
     pass
 
 def test_get_ingredient_adjacency_lists_file_incorrect_extension():
     """
-    Ensure that an InvalidFileExtentionError is raised when the file does not have a .json extension.
+    Ensure that an InvalidFileExtentionError is raised when the file does not
+    have a .json extension.
     """
     with raises(util.InvalidFileExtentionError) as e:
-        util.get_ingredient_adjacency_lists(TEST_INGREDIENTS_INVALID_FILE_EXTENSION)
+        util.get_ingredient_adjacency_lists(TEST_INVALID_FILE_EXTENSION)
 
     # Check the message raised exception
     assert str(e.value) == "The file must have a .json extension."
@@ -240,4 +254,135 @@ def test_get_ingredient_adjacency_lists_file_incorrect_extension():
 Testing the function get_effect_details
 """
 
-pass
+def test_get_effect_details_basic():
+    """Test function with a basic JSON input."""
+    effect_details = util.get_effect_details(TEST_EFFECTS_JSON)
+
+    # Check the effect details for the first effect
+    assert effect_details['0'] == {
+        'name': 'effect_0',
+        'value': float32(0.12),
+    }
+
+    # Check the effect details for a middle effect
+    assert effect_details['5'] == {
+        'name': 'effect_5',
+        'value': float32(0.41),
+    }
+
+    # Check the effect details for the last effect
+    assert effect_details['8'] == {
+        'name': 'effect_8',
+        'value': float32(0.29),
+    }
+
+    pass
+
+def test_get_effect_details_typing():
+    """
+    Ensure that the function returns the correct types.
+    This is a catch-all from value_error tests.
+    """
+    effect_details = util.get_effect_details(TEST_EFFECTS_JSON)
+
+    # Check the type of the effect details
+    assert isinstance(effect_details, dict)
+
+    # Check the type of the first effect's details
+    assert isinstance(effect_details['0'], dict)
+
+    # Check the type of the first effect's name
+    assert isinstance(effect_details['0']['name'], str)  # name should be a string
+
+    # Check the type of the first effect's value
+    assert issubdtype(effect_details['0']['value'], float32)  # value should be a float
+
+    pass
+
+def test_get_effect_details_value_error_1():
+    """
+    Ensure ValueError is raised when the effect is not a dictionary.
+    This test is for the case where the effect is an integer.
+    Effected effect with id 1 in test JSON file.
+    """
+    with raises(ValueError) as e:
+        util.get_effect_details(TEST_EFFECTS_INVALID_VALUE_TYPE_1_JSON)
+
+    # Check the message raised exception
+    assert str(e.value) == (
+        "Invalid type for effects_json[effect_id]: <class 'int'> in effect '1'"
+    )
+
+    pass
+
+def test_get_effect_details_value_error_2():
+    """
+    Ensure ValueError is raised when the effect name is not a string.
+    This test is for the case where the effect name is an integer.
+    Effected effect with id 2 in test JSON file.
+    """
+    with raises(ValueError) as e:
+        util.get_effect_details(TEST_EFFECTS_INVALID_VALUE_TYPE_2_JSON)
+
+    # Check the message raised exception
+    assert str(e.value) == (
+        "Invalid type for effect name: <class 'int'> in effect '2'"
+    )
+
+    pass
+
+def test_get_effect_details_value_error_3():
+    """
+    Ensure ValueError is raised when the effect value is not a float.
+    This test is for the case where the effect value is a string.
+    Effected effect with id 3 in test JSON file.
+    """
+    with raises(ValueError) as e:
+        util.get_effect_details(TEST_EFFECTS_INVALID_VALUE_TYPE_3_JSON)
+
+    # Check the message raised exception
+    assert str(e.value) == (
+        "Invalid type for effect value: <class 'str'> in effect '3'"
+    )
+
+    pass
+
+def test_get_effect_details_missing_key_error():
+    """
+    Ensure that a MissingKeyError is raised when a required key is missing in
+    the JSON file.
+    """
+    with raises(util.MissingKeyError) as e:
+        util.get_effect_details(TEST_EFFECTS_MISSING_KEY)
+
+    # Check the message raised exception
+    assert str(e.value) == "Missing required keys in effect 1: {'value'}"
+
+    pass
+
+def test_get_effect_details_file_not_found_error():
+    """
+    Ensure that a FileNotFoundError is raised when the file does not exist.
+    """
+    with raises(FileNotFoundError) as e:
+        util.get_effect_details(TEST_FILE_NOT_FOUND_POINTER)
+
+    # Check the message raised exception
+    assert str(e.value) == (
+        f"File not found: {TEST_FILE_NOT_FOUND_POINTER}"
+    )
+
+    pass
+
+def test_get_effect_details_file_incorrect_extension():
+    """
+    Ensure that an InvalidFileExtentionError is raised when the file does not
+    have a .json extension.
+    """
+    with raises(util.InvalidFileExtentionError) as e:
+        util.get_effect_details(TEST_INVALID_FILE_EXTENSION)
+
+    # Check the message raised exception
+    assert str(e.value) == "The file must have a .json extension."
+
+    pass
