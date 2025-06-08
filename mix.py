@@ -100,7 +100,7 @@ class Mix:
                 raise InvalidEffectException(effect)
 
             # add the mult value to the multiplie
-            multiplier += float(effect_details[str(effect)]['multiplier'])
+            multiplier += float(effect_details[str(effect)]['value'])
         return float32(round(multiplier, 2))
 
 class MixException(Exception):
